@@ -23,7 +23,7 @@ const PORT = 443; // Standard HTTPS port
 
 // --- Static Files and Routes ---
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/novnc', express.static(path.join(__dirname, 'node_modules/novnc')));
+app.use('/novnc', express.static(path.join(__dirname, 'node_modules/@novnc/novnc'))); 
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'vnc.html'));
