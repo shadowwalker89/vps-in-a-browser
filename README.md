@@ -45,18 +45,7 @@ This single command will guide you through the final setup, obtain an SSL certif
 ```bash
 sudo ./start.sh
 ```
-he script will ask for your domain name and an email address. Once finished, it will provide you with the final URL to access your VNC session. 
-🛠️ Managing the Application 
-
-The application is managed by pm2. Here are some useful commands: 
-
-     pm2 status: See the status of the running applications.
-     pm2 logs: View the real-time logs for all applications.
-     pm2 logs vps-server: View logs only for the main server.
-     pm2 stop all: Stop all applications.
-     pm2 restart all: Restart all applications.
-     pm2 delete all: Remove all applications from the pm2 process list.
-     
+You will be prompted to choose between: </p><ol start="1" dir="auto" data-emit-thinking-stage="false"><li class="text-start"><strong>HTTPS Mode</strong>: For use with a domain name. You'll need to provide your domain and an email for the SSL certificate. </li><li class="text-start"><strong>HTTP Mode</strong>: For quick access via your server's IP address, without SSL. </li></ol><div class=""></div><p dir="auto" class="svelte-121hp7c">After the script finishes, it will provide you with the final URL to access your VNC session. </p><div class=""></div><h2 dir="auto" class="svelte-121hp7c">🛠️ Managing the Application </h2><p dir="auto" class="svelte-121hp7c">The application is managed by <code class="cursor-pointer codespan">pm2</code>. Here are some useful commands: </p><div class=""></div><ul dir="auto"><li class="text-start"> <code class="cursor-pointer codespan">pm2 status</code>: See the status of running applications.</li><li class="text-start"> <code class="cursor-pointer codespan">pm2 logs</code>: View real-time logs for all applications.</li><li class="text-start"> <code class="cursor-pointer codespan">pm2 logs &lt;app_name&gt;</code>: View logs for a specific app (e.g., <code class="cursor-pointer codespan">pm2 logs websockify</code>).</li><li class="text-start"> <code class="cursor-pointer codespan">pm2 stop all</code>: Stop all applications.</li><li class="text-start"> <code class="cursor-pointer codespan">pm2 restart all</code>: Restart all applications.</li><li class="text-start"> <code class="cursor-pointer codespan">pm2 delete all</code>: Remove all applications from the pm2 process list.</li>
 
 🤝 Contributing 
 
