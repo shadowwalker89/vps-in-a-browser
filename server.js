@@ -1,13 +1,13 @@
 const express = require('express');
 const https = require('https');
 const fs = require('fs');
-const path = require('path');
 
 const app = express();
 const domain = process.env.DOMAIN;
 
 if (!domain) {
     console.error("❌ FATAL ERROR: DOMAIN environment variable not set.");
+    console.error("This server is only for HTTPS mode. Please run the start script correctly.");
     process.exit(1);
 }
 
@@ -30,7 +30,7 @@ server.listen(PORT, '0.0.0.0', () => {
     console.log("\n" + "=".repeat(50));
     console.log("✅ VPS-in-a-Browser is running securely!");
     console.log("=".repeat(50));
-    console.log(`🔗 Access your VNC in your browser at:`);
-    console.log(`   https://${domain}/`);
+    console.log(`🔗 Redirecting to VNC client at:`);
+    console.log(`   https://${domain}:6080/vnc.html`);
     console.log("=".repeat(50));
 });
