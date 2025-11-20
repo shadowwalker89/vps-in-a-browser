@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Ensure the script is executable
-chmod +x "$0"
+# Add global npm binaries to PATH to fix 'pm2 not found' error
+export PATH="/usr/local/bin:$PATH"
 
 # Colors for better output
 GREEN='\033[0;32m'
@@ -64,7 +64,7 @@ if [ "$mode" == "1" ]; then
     fi
     echo -e "${GREEN}✅ SSL certificate obtained successfully!${NC}"
 
-    # Step 5: Create pm2 config for HTTPS
+    # Step 5: Create pm2 configuration for HTTPS
     echo -e "\n${YELLOW}⚙️ Creating pm2 configuration for HTTPS...${NC}"
     cat > ecosystem.config.js << EOL
 module.exports = {
@@ -102,7 +102,7 @@ else
     # --- HTTP Mode ---
     echo -e "\n${YELLOW}🌐 Setting up for HTTP access via IP address...${NC}"
     
-    # Step 5: Create pm2 config for HTTP
+    # Step 5: Create pm2 configuration for HTTP
     echo -e "\n${YELLOW}⚙️ Creating pm2 configuration for HTTP...${NC}"
     cat > ecosystem.config.js << EOL
 module.exports = {
@@ -121,7 +121,7 @@ module.exports = {
   ]
 };
 EOL
-    # Get IP for display to the user
+    # Get IP for display to user
     SERVER_IP=$(curl -s ifconfig.me)
     FINAL_URL="http://${SERVER_IP}:6080/vnc.html"
 fi
@@ -135,12 +135,18 @@ if [ ! -d "node_modules" ]; then
     npm install
 fi
 
-# Step 7: Start services with pm2
+# Step 7: Check and install pm2 if not found
+if ! command -v pm2 &> /dev/null; then
+    echo -e "${YELLOW}pm2 not found. Installing pm2 globally...${NC}"
+    npm install pm2 -g
+fi
+
+# Step 8: Start services with pm2
 echo -e "\n${YELLOW}🚀 Starting services with pm2...${NC}"
 pm2 start ecosystem.config.js
 pm2 save
 
-# Step 8: Set up to run on server boot
+# Step 9: Set up to run on server boot
 echo -e "\n${YELLOW}🔧 Setting up startup script for pm2...${NC}"
 pm2 startup | grep -E '^sudo' | sh
 
