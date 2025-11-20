@@ -4,20 +4,10 @@
   "description": "Run a VPS-like environment directly in your browser.",
   "main": "server.js",
   "scripts": {
-    "start": "node setup-and-start.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "sudo ./start.sh"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "socket.io": "^4.7.2",
-    "@novnc/novnc": "^1.4.0"
-  },
-  "keywords": [
-    "vps",
-    "browser",
-    "vnc",
-    "nodejs"
-  ],
-  "author": "shadowwalker89",
-  "license": "MIT"
+    "socket.io": "^4.7.2"
+  }
 }
