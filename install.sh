@@ -12,63 +12,80 @@ echo -e "${GREEN}============================================${NC}"
 
 # Check for root access
 if [ "$(id -u)" != "0" ]; then
-   echo -e "${RED}This script must be run as root. Please use 'sudo'.${NC}" 1>&2
+   echo -e "${RED}این اسکریپت باید با دسترسی روت اجرا شود. لطفاً از 'sudo' استفاده کنید.${NC}" 1>&2
    exit 1
 fi
 
-echo -e "\n${YELLOW}Please select your preferred desktop environment:${NC}"
-echo "1) LXDE (Lightweight and fast - Recommended)"
-echo "2) XFCE4 (Balanced and popular)"
-echo "3) Ubuntu Desktop (GNOME - Full-featured and heavy)"
-echo "4) Exit"
+echo -e "\n${YELLOW}لطفاً محیط دسکتاپ مورد نظر خود را انتخاب کنید:${NC}"
+echo "1) LXDE (سبک و سریع - پیشنهادی)"
+echo "2) XFCE4 (متعادل و محبوب)"
+echo "3) Ubuntu Desktop (GNOME - کامل و سنگین)"
+echo "4) خروج"
 
-read -p "Enter your choice [1-4]: " choice
+read -p "گزینه خود را وارد کنید [1-4]: " choice
 
 case $choice in
     1)
         DESKTOP="LXDE"
-        PACKAGES="lxde tightvncserver"
+        PACKAGES="lxde tightvncserver chromium-browser"
         STARTUP_CMD="startlxde"
         ;;
     2)
         DESKTOP="XFCE4"
-        PACKAGES="xfce4 xfce4-goodies tightvncserver"
+        PACKAGES="xfce4 xfce4-goodies tightvncserver chromium-browser"
         STARTUP_CMD="startxfce4"
         ;;
     3)
         DESKTOP="Ubuntu Desktop (GNOME)"
-        PACKAGES="ubuntu-desktop-minimal vnc4server"
+        PACKAGES="ubuntu-desktop-minimal vnc4server chromium-browser"
         STARTUP_CMD="gnome-session"
         ;;
     4)
-        echo -e "${YELLOW}Installation canceled.${NC}"
+        echo -e "${YELLOW}نصب لغو شد.${NC}"
         exit 0
         ;;
     *)
-        echo -e "${RED}Invalid option. Installation canceled.${NC}"
+        echo -e "${RED}گزینه نامعتبر است. نصب لغو شد.${NC}"
         exit 1
         ;;
 esac
 
-echo -e "\n${YELLOW}You have selected ${DESKTOP}.${NC}"
-echo -e "${YELLOW}Installing required packages...${NC}"
+echo -e "\n${YELLOW}شما ${DESKTOP} را انتخاب کردید.${NC}"
+echo -e "${YELLOW}در حال نصب پکیج‌های مورد نیاز...${NC}"
 apt update
 apt install -y $PACKAGES
 
-echo -e "\n${YELLOW}Configuring VNC...${NC}"
+echo -e "\n${YELLOW}🎨 Applying lightweight desktop configurations...${NC}"
 
-# Create xstartup file for the selected desktop
+# Create optimized xstartup file for the selected desktop
 mkdir -p ~/.vnc
 cat > ~/.vnc/xstartup <<EOF
 #!/bin/bash
 unset SESSION_MANAGER
 unset DBUS_SESSION_BUS_ADDRESS
- $STARTUP_CMD &
+
+# Apply performance optimizations based on desktop choice
+case "$choice" in
+    1) # LXDE
+        export GTK_THEME=Adwaita-dark
+        ;;
+    2) # XFCE4
+        xfconf-query -c xfce4-session -p /xfwm4/general/use_compositing -s false &
+        ;;
+    3) # GNOME
+        gsettings set org.gnome.desktop.interface enable-animations false &
+        gsettings set org.gnome.shell disable-user-extensions true &
+        ;;
+esac
+
+$STARTUP_CMD &
 EOF
 chmod +x ~/.vnc/xstartup
 
 echo -e "\n${GREEN}✅ Installation of ${DESKTOP} completed successfully.${NC}"
-echo -e "${YELLOW}You can now start the VNC server with:${NC}"
+echo -e "${GREEN}✅ Desktop environment optimized for low resource usage.${NC}"
+echo -e "${GREEN}✅ Chromium browser has been installed.${NC}"
+echo -e "\n${YELLOW}اکنون می‌توانید سرور VNC را با دستور زیر اجرا کنید:${NC}"
 echo -e "${GREEN}vncserver :1${NC}"
-echo -e "${YELLOW}And stop it with:${NC}"
+echo -e "${YELLOW}و آن را با دستور زیر متوقف کنید:${NC}"
 echo -e "${GREEN}vncserver -kill :1${NC}"
