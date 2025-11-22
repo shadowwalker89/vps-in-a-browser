@@ -25,7 +25,7 @@ Install Node.js, npm, and other required packages.
 
 ```bash
 sudo apt update
-sudo apt install -y git nodejs npm certbot websockify novnc unzip ufw
+sudo apt install -y git nodejs npm certbot websockify novnc unzip ufw xfonts-base xfonts-75dpi xfonts-100dpi
 ```
 Step 2: Install VNC Desktop 
 
