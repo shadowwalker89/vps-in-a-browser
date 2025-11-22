@@ -27,7 +27,7 @@ ufw allow 6080/tcp > /dev/null 2>&1
 echo -e "${GREEN}✅ Ports 80, 443, and 6080 are allowed in ufw.${NC}"
 
 # Step 2: Select execution mode
-echo -e "\n${YELLOW}Please select the execution mode:${NC}"
+echo -e "\n${YELLOW}Please select execution mode:${NC}"
 echo "1) With domain and HTTPS (Recommended)"
 echo "2) Without domain and with IP (HTTP)"
 read -p "Enter your choice [1-2]: " mode
@@ -137,16 +137,25 @@ fi
 
 # Step 7: Check and install pm2 if not found
 if ! command -v pm2 &> /dev/null; then
-    echo -e "${YELLOW}pm2 not found. Installing pm2 globally...${NC}"
+    echo -e "\n${YELLOW}pm2 not found. Installing pm2 globally...${NC}"
     npm install pm2 -g
 fi
 
-# Step 8: Start services with pm2
+# Step 8: Check and start VNC server (NEW STEP)
+echo -e "\n${YELLOW}🖥️ Checking and starting VNC server...${NC}"
+if ! pgrep -x "Xtightvnc" > /dev/null; then
+    echo -e "${YELLOW}VNC server is not running. Starting it now...${NC}"
+    vncserver :1
+else
+    echo -e "${GREEN}✅ VNC server is already running.${NC}"
+fi
+
+# Step 9: Start services with pm2
 echo -e "\n${YELLOW}🚀 Starting services with pm2...${NC}"
 pm2 start ecosystem.config.js
 pm2 save
 
-# Step 9: Set up to run on server boot
+# Step 10: Set up to run on server boot
 echo -e "\n${YELLOW}🔧 Setting up startup script for pm2...${NC}"
 pm2 startup | grep -E '^sudo' | sh
 
